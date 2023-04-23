@@ -1,0 +1,12 @@
+.books {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	row-gap: 30px;
+	column-gap: 40px;
+	// width: fit-content;
+	justify-content: center;
+}

@@ -1,0 +1,202 @@
+header {
+	background-color: white;
+	height: fit-content;
+	max-width: 100%;
+	flex-grow: 1;
+	padding: 11px 20px 9px 24px;
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 900;
+	width: calc(100vw - 103px);
+	@media (max-width: 1010px) {
+		padding-right: 15px;
+	}
+	@media (max-width: 950px) {
+		width: calc(100vw - 76px);
+	}
+	@media (max-width: 940px) {
+		padding-left: 15px;
+	}
+	@media (max-width: 750px) {
+		padding-left: 5px;
+		width: calc(100vw - 51px);
+	}
+	@media (max-width: 675px) {
+		width: 100%;
+		padding: 5px 10px 5px 0px;
+	}
+	@media (max-width: 380px) {
+		padding: 5px 10px 5px 0px;
+	}
+}
+
+main {
+	width: 100%;
+}
+
+a {
+	display: grid;
+	place-items: center;
+}
+
+.logo-and-nav, .header-wrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: stretch;
+	align-items: center;
+}
+
+.logo-and-nav {
+	flex-grow: 0;
+	& [alt="company logo"] {
+		margin: 0;
+		padding: 0;
+		@media (max-width: 410px) {
+			width: 90px;
+		}
+	}
+}
+
+.button-group {
+	flex-grow: 1;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	// @media (max-width: 676px) {
+	// 	display: none;
+	// }
+}
+
+.button-group.hidden {
+	display: none;
+}
+
+.nav-item {
+	background: #F3F6F9;
+	border-radius: 6px;
+	width: 116px;
+	height: 44px;	
+	font-family: 'Poppins', sans-serif;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: calc(21px / 14px * 100%);
+	color: #464E5F;
+	display: grid;
+	place-items: center;
+	cursor: pointer;
+	transition: opacity 0.3s, transform 0.2s;
+	&.hidden {
+		opacity: 0;
+		pointer-events: none;
+	}
+	&:hover {
+		transform: scale(1.1);
+		box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.279);
+	}
+	@media (max-width: 940px) {
+		width: 100px;
+	}
+	@media (max-width: 897px) {
+		width: 90px;
+		height: 40px;
+	}
+	@media (max-width: 410px) {
+		width: 90px;
+		height: 37px;
+		&:hover {
+			transform: none;
+			box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.167);
+		}
+	}
+	@media (max-width: 355px) {
+		width: 70px;
+		font-size: 12px;
+	}
+}
+
+.first-button {
+	margin-left: 50px;
+	@media (max-width: 1030px) {
+		margin-left: 30px;
+	}
+	@media (max-width: 960px) {
+		margin-left: 15px;
+	}
+}
+
+.second-button {
+	margin-left: 29px;
+	@media (max-width: 960px) {
+		margin-left: 15px;
+	}
+}
+
+.button {
+	width: 96px;
+	height: 35px;
+	border-radius: 12px;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 600;
+	font-size: 12px;
+	line-height: 18px / 12px * 100%;
+	color: #FFFFFF;
+	cursor: pointer;
+	transition: all 0.2s;
+	&:hover {
+		transform: scale(1.1);
+	}
+}
+
+.add-button {
+	background-color: #2C9AFF;
+	opacity: 1;
+	transition: all 0.3s ease-in-out;
+	pointer-events: all;
+	@media (max-width: 780px) {
+		width: 80px;
+	}
+}
+
+.login-button {
+	background-color: #181C32;
+	margin-left: 70px;
+	@media (max-width: 1010px) {
+		margin-left: 50px;
+	}
+	@media (max-width: 897px) {
+		width: 60px;
+	}
+	@media (max-width: 780px) {
+		margin-left: 30px;
+	}
+}
+
+.register-button {
+	background-color: #F64E60;
+	margin-left: 25px;
+	@media (max-width: 1010px) {
+		margin-left: 15px;
+	}
+	@media (max-width: 897px) {
+		width: 60px;
+	}
+}
+
+.hamburger {
+	width: 50px;
+	height: 50px;
+	flex-grow: 1;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-left: 10px;
+	@media (max-width: 325px) {
+		margin: 0;
+	}
+}
+.hamburger-react {
+	@media (max-width: 400px) {
+		transform: scale(0.9);
+	}
+}

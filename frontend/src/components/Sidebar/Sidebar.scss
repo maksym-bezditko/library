@@ -1,0 +1,72 @@
+aside {
+	width: 102px;
+	min-height: 100vh;
+	flex-grow: 0;
+	background-color: #8950FC;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 13px 19px 0px 17px;
+	overflow: hidden;
+	position: fixed;
+	z-index: 0;
+	@media (max-width: 950px) {
+		width: 75px;
+	}
+	@media (max-width: 750px) {
+		width: 50px;
+	}
+	@media (max-width: 675px) {
+		display: none;
+	}
+}
+.icon {
+	width: 60px;
+	height: 60px;
+	display: grid;
+	place-items: center;
+	cursor: pointer;
+	border-radius: 7px;
+	transition: all 0.5s ease-in-out;
+	opacity: 1;
+	@media (max-width: 750px) {
+		margin-bottom: 20px;
+		width: 40px;
+		height: 40px;
+	}
+}
+
+.icon.hidden {
+	opacity: 0;
+	height: 0;
+	transform: scaleY(0)
+}
+
+.logo {
+	margin-bottom: 50px;
+	@media (max-width: 750px) {
+		margin-top: 10px;
+		width: 50px;
+	}
+}
+
+.stats {
+	margin-bottom: 42px;
+}
+
+.add {
+	margin-bottom: 20px;
+}
+
+.icon:hover {
+	background-color: #3f4254c0;
+}
+
+.report:hover {
+	background-color: #F64E60;
+}
+
+.settings:hover {
+	background-color: #2C9AFF;
+}
+
