@@ -17,8 +17,26 @@ public class DeleteBookRequestBody
     public string bookId { get; set; }
 }
 
+public class DeleteAssociatedQuotesRequestBody
+{
+    public string userId { get; set; }
+    public string bookId { get; set; }
+}
+
+public class DeleteQuoteRequestBody
+{
+    public string userId { get; set; }
+    public string quoteId { get; set; }
+}
+
 public class AddBookRequestBody
 {
     public string userId { get; set; }
     public Book book { get; set; }
+}
+
+public class AddQuoteRequestBody
+{
+    public string userId { get; set; }
+    public Quote quote { get; set; }
 }

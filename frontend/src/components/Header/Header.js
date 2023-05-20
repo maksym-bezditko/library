@@ -1,25 +1,22 @@
 import "./Header.scss";
 import gistyLogo from "../../assets/Gisty.png";
 import { NavLink } from 'react-router-dom';
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Fade as Hamburger} from "hamburger-react";
-import { signOut } from "firebase/auth";
-import { auth } from "../..";
 import AddModal from "../Popups/AddModal";
 import LoginModal from "../Popups/LoginModal";
 import RegisterModal from "../Popups/RegisterModal";
 import { useDispatch, useSelector } from "react-redux";
-import { setModal } from "../../slices/slice";
+import { setModal, setMenu } from "../../slices/slice";
 import { modalSelector } from "../../selectors/selectors";
-import { AuthContext } from "../App/App";
 import Menu from "../Menu/Menu";
 import { useWindowSize } from "../../hooks/useWindowSize";
-import { setMenu } from "../../slices/slice";
 import { menuSelector } from "../../selectors/selectors";
 import AddQuoteModal from '../Popups/AddQuoteModal';
 import DeleteQuoteModal from "../Popups/DeleteQuoteModal";
+import { useHelper } from "../../hooks/useHelper";
 
-const Header = () => {
+const Header = ({ isAuthenticated }) => {
 	const dispatch = useDispatch()
 
 	const modal = useSelector(modalSelector);
@@ -27,21 +24,16 @@ const Header = () => {
 
 	const { width } = useWindowSize();
 
-	const user = useContext(AuthContext)
-
-
 	const checkKeypress = useCallback(event => {
 		if (event.key === "Escape") {
 			setMenu(false)
 		}
 	}, [])
 
-	const logout = useCallback(() => {
-		signOut(auth)
-	}, []);
+	const { signOut } = useHelper();
 
-	const ButtonGroup = useCallback(({user, width}) => {
-		if (!user) {
+	const ButtonGroup = useCallback(({ width }) => {
+		if (!isAuthenticated) {
 			return (
 				<>
 					<button className='button login-button'
@@ -57,24 +49,24 @@ const Header = () => {
 				</>
 			)
 
-		} else if (user && width < 676) {
+		} else if (isAuthenticated && width < 676) {
 			return null
-		} else if (user && width >= 676) {
+		} else if (isAuthenticated && width >= 676) {
 			return (
 				<>
 					<button
-						className={`button add-button${user ? "" : " hidden"}`}
+						className={`button add-button${isAuthenticated ? "" : " hidden"}`}
 						onClick={() => dispatch(setModal("add"))}
 						>
 						Add a book
 					</button>
-					<button className='button login-button' onClick={logout}>
+					<button className='button login-button' onClick={signOut}>
 						Log out
 					</button>
 				</>
 			)
 		}
-	}, [dispatch, logout])
+	}, [dispatch, isAuthenticated, signOut])
 
 	useEffect(() => {
 		document.addEventListener("keyup", checkKeypress)
@@ -88,7 +80,7 @@ const Header = () => {
     <>
       <LoginModal visible={modal === "login" ? true : false} />
       <RegisterModal visible={modal === "register" ? true : false} />
-      {auth.currentUser && (
+      {isAuthenticated && (
 			<>
 				<AddModal visible={modal === "add" ? true : false} />
 				<AddQuoteModal visible={modal === "add-quote" ? true : false} />
@@ -99,7 +91,7 @@ const Header = () => {
       <header>
         <div className="header-wrapper">
 			<div className="logo-and-nav">
-				<NavLink to={user ? "/books" : "about"} end>
+				<NavLink to={isAuthenticated ? "/books" : "about"} end>
 					<img src={gistyLogo} alt="company logo" />
 				</NavLink>
 
@@ -107,9 +99,9 @@ const Header = () => {
 					to="/books"
 					style={({ isActive }) => ({
 						color: isActive ? "#8950FC" : "#464E5F",
-							display: width < 676 && user ? "" : "none"
+							display: width < 676 && isAuthenticated ? "" : "none"
 					})}
-					className={`nav-item first-button${user ? "" : " hidden"}`}
+					className={`nav-item first-button${isAuthenticated ? "" : " hidden"}`}
 				>
 					My books
 				</NavLink>
@@ -118,9 +110,9 @@ const Header = () => {
 					to="/quotes"
 					style={({ isActive }) => ({
 						color: isActive ? "#8950FC" : "#464E5F",
-							display: width < 676 && user ? "" : "none"
+							display: width < 676 && isAuthenticated ? "" : "none"
 					})}
-					className={`nav-item second-button${user ? "" : " hidden"}`}
+					className={`nav-item second-button${isAuthenticated ? "" : " hidden"}`}
 				>
 					My quotes
 				</NavLink>
@@ -128,10 +120,10 @@ const Header = () => {
 
 
           	<div className="button-group">
-				  <ButtonGroup user={user} width={width}/>
+				  <ButtonGroup user={isAuthenticated} width={width}/>
 			</div>
 
-			<div className="hamburger" style={{display: width < 676 && user ? "" : "none"}}>
+			<div className="hamburger" style={{display: width < 676 && isAuthenticated ? "" : "none"}}>
 				<Hamburger size={27} distance="lg" toggled={menu} toggle={() => dispatch(setMenu(true))} color="#3F4254" />
 			</div>
 

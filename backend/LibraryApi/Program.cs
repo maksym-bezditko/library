@@ -9,6 +9,7 @@ builder.Services.Configure<UserStoreDatabaseSettings>(
 
 builder.Services.AddSingleton<UsersService>();
 builder.Services.AddSingleton<BooksService>();
+builder.Services.AddSingleton<QuotesService>();
 
 builder.Services
     .AddControllers()
@@ -20,6 +21,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+    
+app.UseCors(build => build.AllowAnyOrigin());
 
 if (app.Environment.IsDevelopment())
 {

@@ -7,14 +7,14 @@ namespace backend.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class BooksController : ControllerBase
+public class QuotesController : ControllerBase
 {
-    private readonly BooksService _booksService;
+    private readonly QuotesService _quotesService;
     private readonly UsersService _usersService;
 
-    public BooksController(BooksService booksService, UsersService usersService)
+    public QuotesController(QuotesService quotesService, UsersService usersService)
     {
-        _booksService = booksService;
+        _quotesService = quotesService;
         _usersService = usersService;
     }
     
@@ -26,31 +26,44 @@ public class BooksController : ControllerBase
         if (user is null)
             return NotFound(new Response { Status = 404, Message = "User not found!", Succeeded = false });
 
-        return Ok(_booksService.GetAsync(userId));
+        return Ok(_quotesService.GetAsync(userId));
     }
 
     [HttpPost("Add")]
-    public async Task<IActionResult> Add([FromBody] AddBookRequestBody body)
+    public async Task<IActionResult> Add([FromBody] AddQuoteRequestBody body)
     {
         var user = await _usersService.GetAsync(body.userId);
 
         if (user is null)
             return NotFound(new Response { Status = 404, Message = "User not found!", Succeeded = false });
 
-        await _booksService.AddBookAsync(body.userId, body.book);
+        await _quotesService.AddQuoteAsync(body.userId, body.quote);
 
         return Ok();
     }
     
     [HttpPost("Delete")]
-    public async Task<IActionResult> Delete([FromBody] DeleteBookRequestBody body)
+    public async Task<IActionResult> Delete([FromBody] DeleteQuoteRequestBody body)
     {
         var user = await _usersService.GetAsync(body.userId);
 
         if (user is null)
             return NotFound(new Response { Status = 404, Message = "User not found!", Succeeded = false });
 
-        await _booksService.DeleteBookAsync(body.userId, body.bookId);
+        await _quotesService.DeleteQuoteAsync(body.userId, body.quoteId);
+
+        return Ok();
+    }
+    
+    [HttpPost("DeleteAssociated")]
+    public async Task<IActionResult> DeleteAssociated([FromBody] DeleteAssociatedQuotesRequestBody body)
+    {
+        var user = await _usersService.GetAsync(body.userId);
+
+        if (user is null)
+            return NotFound(new Response { Status = 404, Message = "User not found!", Succeeded = false });
+
+        await _quotesService.DeleteQuotesForBookAsync(body.userId, body.bookId);
 
         return Ok();
     }

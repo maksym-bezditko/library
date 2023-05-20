@@ -2,46 +2,25 @@ import "./Quote.scss";
 import React, { useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
-import { auth, db } from "../..";
-import { ref, remove, update } from "firebase/database";
 import { useMemo } from "react";
-import { useList } from "react-firebase-hooks/database";
+import { useRequest } from "../../hooks/useRequest";
+import { useSelector } from "react-redux";
+import { userSelector } from "../../selectors/selectors";
 
-export const deleteQuoteById = (id) => {
-	const userId = auth.currentUser.uid;
-	const itemRef = ref(db, `data/users/${userId}/quotes/${id}`);
+function Quote({book, quote, id, date}) {
+	const createdDate = useMemo(() => new Date(date), [date]);
 
-	return remove(itemRef)
-}
+	const user = useSelector(userSelector);
 
-function Quote({book, quote, id, timestamp}) {
-	const createdDate = useMemo(() => new Date(timestamp), [timestamp]);
+	const { deleteUserQuote } = useRequest();
 
-	const { uid } = auth.currentUser;
-
-	const [quotesSnapshots] = useList(ref(db, `data/users/${uid}/quotes`));
-
-	const quotesList = useMemo(() => {
-		let arr = [];
-		for (let i of quotesSnapshots) {
-			arr.push(i.val())
-		}
-		return arr
-
-	}, [quotesSnapshots])
-
-	const handleIconClick = useCallback(() => {
+	const handleIconClick = useCallback((quoteId) => {
 		try {
-			deleteQuoteById(id)
-			const postData = quotesList.filter(item => item.id !== id)
-
-			const updates = {};
-			updates[`/data/users/${uid}/quotes/`] = postData;
-			update(ref(db), updates);
+			deleteUserQuote(user.id, id)
 		} catch (e) {
 			alert("Sorry, couldn't remove the book, try one more time.")
 		}
-	}, [id, quotesList, uid]);
+	}, [deleteUserQuote, id, user.id]);
 
   	return (
 		<div className="quote-wrapper">
@@ -51,7 +30,7 @@ function Quote({book, quote, id, timestamp}) {
 				</blockquote>
 				<div className="additional">
 					<div className="quote-info additional-item">
-						Added {createdDate.toDateString().slice(3)} from {book}
+						Added {createdDate.toDateString().slice(3)} from {book ? `${book}` : 'deleted book'}
 					</div>
 					<div>
 						<FontAwesomeIcon icon={faTrash} className="trash-icon" onClick={handleIconClick}/>

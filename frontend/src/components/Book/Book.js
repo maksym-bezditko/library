@@ -1,12 +1,12 @@
 import "./Book.scss";
-import { Link, Navigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { statuses } from "../Popups/AddModal";
 
-export const Book = ({id, title, link, timestamp, status}) => {
-	const createdDate = new Date(timestamp);
+export const Book = ({id, title, link, date, status}) => {
+	const createdDate = new Date(date);
 
 	return (
-		<Link to={`/books/${id}`} className="book-wrapper" onClick={<Navigate to={`/books/${id}`}/>}>
+		<NavLink to={`/books/${id}`} className="book-wrapper" >
 			<div className="image">
 				<img src={link} alt="bookCover" className="bookCover"/>
 			</div>
@@ -19,6 +19,6 @@ export const Book = ({id, title, link, timestamp, status}) => {
 					<div className="date">{createdDate.toDateString().slice(3)}</div>
 				</div>
 			</div>
-		</Link>
+		</NavLink>
 	)
 }

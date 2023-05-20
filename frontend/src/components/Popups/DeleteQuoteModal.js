@@ -1,55 +1,41 @@
 import React, {useState, useCallback} from 'react'
 import Modal from '../../HOCs/Modal/Modal';
-import { auth } from '../..';
-import { db } from '../..';
-import { ref, update, remove } from "firebase/database";
 import "./form.scss";
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../slices/slice';
-import { modalSelector, bookToDeleteSelector } from '../../selectors/selectors';
+import { modalSelector, bookToDeleteSelector, userSelector } from '../../selectors/selectors';
 import { useNavigate } from 'react-router-dom';
 import { setDeleteId } from '../../slices/slice';
-import useQuoteList from '../../hooks/useQuoteList';
-
-export const deleteBookById = (id) => {
-	const userId = auth.currentUser.uid;
-	const itemRef = ref(db, `data/users/${userId}/books/${id}`);
-
-	return remove(itemRef);
-}
+import { useRequest } from '../../hooks/useRequest';
 
 function DeleteQuoteModal({visible}) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate()
 
 	const bookToDelete = useSelector(bookToDeleteSelector);
-	const modal = useSelector(modalSelector)
 
-	const [checked, setChecked] = useState(false)
+	const modal = useSelector(modalSelector);
 
-	const { uid } = auth.currentUser;
+	const { deleteUserBook } = useRequest();
 
-	const { quotes } = useQuoteList();
+	const [checked, setChecked] = useState(false);
+
+	const user = useSelector(userSelector);
 
 	const handleButtonClick = useCallback(async () => {
 		dispatch(setModal(null))
 
 		try {
-			navigate("/")
-			await deleteBookById(bookToDelete)
-			if (!checked) {
-				const postData = quotes.filter(item => item.addedFrom !== bookToDelete)
+			navigate("/books")
 
-				const updates = {};
-				updates[`/data/users/${uid}/quotes/`] = postData;
-				update(ref(db), updates);
-			}
+			await deleteUserBook(user.id, bookToDelete, checked);
+
 			dispatch(setDeleteId(null))
 		} catch (e) {
 			dispatch(setDeleteId(null))
 			alert("Sorry, couldn't remove the book, try one more time.")
 		}
-	}, [bookToDelete, checked, dispatch, navigate, quotes, uid]);
+	}, [bookToDelete, checked, deleteUserBook, dispatch, navigate, user.id]);
 
 	const handleCheckboxClick = useCallback(() => setChecked(!checked), [checked]);
 

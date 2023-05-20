@@ -2,26 +2,26 @@ import "./Sidebar.scss"
 import logo from "../../assets/Logo.png";
 import { NavLink } from "react-router-dom"
 import { setModal } from "../../slices/slice";
-import { useDispatch } from "react-redux";
-import { auth } from "../..";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { userSelector } from "../../selectors/selectors";
 
 const activeStyle = {
 	backgroundColor: "#3f4254c0"
 }
 
-const Sidebar = () => {
+const Sidebar = ({ isAuthenticated }) => {
 	const dispatch = useDispatch();
-	const [user] = useAuthState(auth)
+
+	const user = useSelector(userSelector);
 
 	return (
 		<aside>
-      		<NavLink to={user ? "/books" : "about"}>
+      		<NavLink to={user.id ? "/books" : "about"}>
 				<img src={logo} className='logo' alt="logo"/>
 			</NavLink>
 
 
-			<div className={`icon add${auth.currentUser ? "" : " hidden"}`} onClick={() => dispatch(setModal("add"))}>
+			<div className={`icon add${isAuthenticated ? "" : " hidden"}`} onClick={() => dispatch(setModal("add"))}>
 				<svg className="test" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M20.1797 13.4375C20.6327 13.4375 21 13.0702 21 12.6172V3.92188C21 2.1126 19.528 0.64063 17.7188 0.64063H16.6523H16.2747C16.7278 0.64063 15.5 0.64063 16.2747 0.64063C15.8216 0.64063 16.4635 0.64063 15.832 0.64063H15.0117H11.2793C10.587 0.64063 10.912 0.64063 10.459 0.64063C10.0059 0.64063 10.2357 0.64063 9.63867 0.64063H5.94727L5.42969 0.640625C6.07422 0.64064 5.61319 0.640633 5.16014 0.640633C4.70708 0.640633 5.71959 0.640622 5 0.64063H4.30664H3.28125C1.47197 0.64063 0 2.1126 0 3.92188V16.7188C0 18.528 1.47197 20 3.28125 20H17.7188C19.528 20 21 18.528 21 16.7188C21 16.2657 20.6327 15.8984 20.1797 15.8984C19.7266 15.8984 19.3594 16.2657 19.3594 16.7188C19.3594 17.6234 18.6234 18.3594 17.7188 18.3594H3.28125C2.37661 18.3594 1.64062 17.6234 1.64062 16.7188V3.92188C1.64062 3.01724 2.37661 2.28126 3.28125 2.28126H4.30664H4.70107C5.5 2.28126 4.8547 2.28126 5.30775 2.28126C5.76081 2.28126 5.12695 2.28126 5.5747 2.28126H5.94727H9.63867H10C10.7671 2.28126 10.0059 2.28126 10.459 2.28126C10.912 2.28126 10.3805 2.28126 11.2793 2.28126H15.0117H15.832C16.5 2.28126 15.8216 2.28126 16.2747 2.28126C16.7278 2.28126 16 2.28126 16.5 2.28126H16.6523H17.7188C18.6234 2.28126 19.3594 3.01724 19.3594 3.92188V12.6172C19.3594 13.0702 19.7266 13.4375 20.1797 13.4375Z" fill="#EEE5FF"/>
 					<path d="M10.459 15.0371C10.912 15.0371 11.2793 14.6699 11.2793 14.2168V11.9609H13.5352C13.9882 11.9609 14.3555 11.5937 14.3555 11.1406C14.3555 10.6876 13.9882 10.3203 13.5352 10.3203H11.2793V8.06445C11.2793 7.61139 10.912 7.24414 10.459 7.24414C10.0059 7.24414 9.63867 7.61139 9.63867 8.06445V10.3203H7.38281C6.92975 10.3203 6.5625 10.6876 6.5625 11.1406C6.5625 11.5937 6.92975 11.9609 7.38281 11.9609H9.63867V14.2168C9.63867 14.6699 10.0059 15.0371 10.459 15.0371Z" fill="#EEE5FF"/>
@@ -31,7 +31,7 @@ const Sidebar = () => {
 
 			<NavLink
 				style={({ isActive }) => isActive ? activeStyle : undefined}
-				to={user ? "/books" : "about"}
+				to={user.id ? "/books" : "about"}
 				className="icon home"
 			>
 				<svg width="21" height="21" viewBox="0 0 21 21" fill="black" xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +49,7 @@ const Sidebar = () => {
 			<NavLink
 				style={({ isActive }) => isActive ? activeStyle : undefined}
 				to="quotes"
-				className={`icon quotes${auth.currentUser ? "" : " hidden"}`}
+				className={`icon quotes${isAuthenticated ? "" : " hidden"}`}
 			>
 				<svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M17.1984 2.12871H11.3373V1.28789C11.3373 0.824414 10.9641 0.451172 10.5006 0.451172C10.0371 0.451172 9.66387 0.824414 9.66387 1.28789V2.12871H3.80273C2.6502 2.12871 1.71094 3.06797 1.71094 4.22051V18.4529C1.71094 19.6055 2.6502 20.5447 3.80273 20.5447H17.2025C18.3551 20.5447 19.2943 19.6055 19.2943 18.4529V4.22051C19.2943 3.06797 18.3551 2.12871 17.1984 2.12871ZM14.4832 3.80215L13.6998 5.82422H7.30137L6.51797 3.80215H14.4832ZM17.6168 18.457C17.6168 18.6867 17.4281 18.8754 17.1984 18.8754H3.80273C3.57305 18.8754 3.38437 18.6867 3.38437 18.457V4.22461C3.38437 3.99492 3.57305 3.80625 3.80273 3.80625H4.72148L5.94375 6.96855C6.0668 7.29258 6.37852 7.50586 6.72305 7.50586H14.274C14.6186 7.50586 14.9303 7.29258 15.0533 6.96855L16.2756 3.80625H17.1943C17.424 3.80625 17.6127 3.99492 17.6127 4.22461V18.457H17.6168Z" fill="#EEE5FF"/>

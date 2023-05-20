@@ -7,4 +7,6 @@ public class Quote
     public string content { get; set; } = null!;
     
     public string associatedWithBookId { get; set; } = null!;
+
+    public string date { get; set; } = null!;
 }

@@ -16,8 +16,13 @@ export const menuSelector = createSelector(
 )
 
 export const booksSelector = createSelector(
-	state => state.general.books,
+	state => state.general.user.books,
 	books => books
+)
+
+export const deleteInProgressSelector = createSelector(
+	state => state.general.isDeleteInProgress,
+	isDeleteInProgress => isDeleteInProgress
 )
 
 export const bookToDeleteSelector = createSelector(
@@ -25,15 +30,12 @@ export const bookToDeleteSelector = createSelector(
 	bookToDelete => bookToDelete
 )
 
+export const userSelector = createSelector(
+	state => state.general.user,
+	bookToDelete => bookToDelete
+)
+
 export const quotesSelector = createSelector(
-	state => state.general.books,
-	books => {
-		let arr = [];
-
-		for (let i of books) {
-			arr.concat(i?.quotes)
-		}
-
-		return arr;
-	}
+	state => state.general.user.quotes,
+	quotes => quotes
 )

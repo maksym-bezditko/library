@@ -1,10 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+export const initialState = {
 	modal: "none",
 	deleteId: null,
 	menu: false,
-	books: []
+	books: [],
+	isDeleteInProgress: false,
+	user: {
+		id: null,
+		firstName: null,
+		lastName: null,
+		email: null,
+		password: null,
+		books: [],
+		quotes: [],
+	}
 }
 
 
@@ -15,17 +25,36 @@ const slice = createSlice({
 		setModal: (state, action) => {
 			state.modal = action.payload;
 		},
+
 		setMenu: (state, action) => {
 			state.menu = action.payload
 		},
+
 		setBooks: (state, action) => {
 			state.books = action.payload
 		},
+
 		setDeleteId: (state, action) => {
 			state.deleteId = action.payload
+		},
+
+		setUser: (state, action) => {
+			state.user = action.payload
+		},
+
+		setIsDeleteInProgress: (state, action) => {
+			state.isDeleteInProgress = action.payload
 		}
 	}
 })
 
-export const { setModal, setMenu, setBooks, setDeleteId } = slice.actions;
+export const {
+	setModal,
+	setMenu,
+	setBooks,
+	setDeleteId,
+	setUser,
+	setIsDeleteInProgress,
+} = slice.actions;
+
 export default slice.reducer;

@@ -11,4 +11,6 @@ public class Book
     public string coverUrl { get; set; } = null!;
     
     public string status { get; set; } = null!;
+
+    public string date { get; set; } = null;
 }

@@ -37,9 +37,12 @@ public class UsersController : ControllerBase
         
         var found = users.Any(b => b.email == credentials.email && b.password ==  credentials.password);
 
-        if (found) return Ok(new Response { Status = 200, Message = "User found!", Succeeded = true });
+        if (!found) return NotFound(new Response { Status = 404, Message = "User not found!", Succeeded = false });
+        {
+            var userId = users.Find(b => b.email == credentials.email && b.password == credentials.password)!.id;
+            return Ok(new Response { Status = 200, Message = userId, Succeeded = true });
+        }
 
-        return NotFound(new Response { Status = 404, Message = "User not found!", Succeeded = false });
     }
 
     [HttpPost("Register")]
@@ -47,10 +50,10 @@ public class UsersController : ControllerBase
     {
         await _usersService.CreateAsync(newUser);
 
-        return CreatedAtAction(nameof(Get), new { id = newUser.id }, newUser);
+        return Ok(newUser);
     }
 
-    [HttpDelete("Delete/{userId:length(24)}")]
+    [HttpPost("Delete/{userId:length(24)}")]
     public async Task<IActionResult> Delete(string userId)
     {
         var user = await _usersService.GetAsync(userId);

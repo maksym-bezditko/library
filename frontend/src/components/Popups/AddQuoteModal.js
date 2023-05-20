@@ -2,14 +2,12 @@ import React, { useCallback } from 'react';
 import Modal from '../../HOCs/Modal/Modal';
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { auth } from '../..';
-import { db } from '../..';
-import { ref, update } from "firebase/database";
 import { v4 as uuidv4 } from 'uuid';
 import "./form.scss";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { userSelector } from '../../selectors/selectors';
+import { useRequest } from '../../hooks/useRequest';
 import { setModal } from '../../slices/slice';
-import useBookList from '../../hooks/useBookList';
 
 const validationSchema = Yup.object({
 	quote: Yup.string()
@@ -22,39 +20,29 @@ const validationSchema = Yup.object({
 function AddQuoteModal({visible}) {
 	const dispatch = useDispatch();
 
-	const { books } = useBookList();
+	const user = useSelector(userSelector);
+
+	const books = user.books;
+
+	const { addUserQuote } = useRequest();
 
 	const handleSubmit = useCallback((values, { resetForm, setSubmitting }) => {
-		const {quote, book} = values;
-		const [bookTitle, bookId] = book.split("%")
-		const newId = uuidv4()
-		const uid = auth.currentUser.uid;
-		const timestamp = +new Date();
+		const { quote, book } = values;
 
-		try {
-			const postData = {
-				book: bookTitle,
-				addedFrom: bookId,
-				quote,
-				id: newId,
-				timestamp
-			};
+		console.log(book);
 
-			const updates = {};
+		addUserQuote(user.id, {
+			id: uuidv4(),
+			content: quote,
+			associatedWithBookId: book,
+			date: new Date().toDateString(),
+		})
 
-			updates[`/data/users/${uid}/books/${bookId}/quotes/${newId}`] = postData;
-			updates[`/data/users/${uid}/quotes/${newId}`] = postData;
+		dispatch(setModal('none'));
 
-			update(ref(db), updates);
-
-			dispatch(setModal("none"))
-
-		} catch (e) {
-			alert(e)
-		}
-		resetForm()
-		setSubmitting(false)
-	}, [dispatch]);
+		resetForm();
+		setSubmitting(false);
+	}, [addUserQuote, dispatch, user.id]);
 
 	const renderForm = useCallback(({isSubmitting}) => (
 		<Form className="form">
@@ -73,7 +61,7 @@ function AddQuoteModal({visible}) {
 				<Field name="book" type="text" as="select" className="book-select">
 					<option style={{display: "none"}} value="">Select a book</option>
 					{books.map(item => {
-						return <option key={item.id} value={item.title + "%" + item.id}>{item.title}</option>
+						return <option key={item.id} value={item.id}>{item.title}</option>
 					})}
 				</Field>
 				<ErrorMessage name="book">
@@ -86,17 +74,17 @@ function AddQuoteModal({visible}) {
 	), [books]);
 
   	return (
-	 <Modal visible={visible}>
-		<Formik
-			initialValues={{ quote: '', book: ""}}
-			validationSchema={validationSchema}
-			onSubmit={handleSubmit}
-			validateOnChange
-			validateOnBlur
-		>
-			{renderForm}
-		</Formik>
-	 </Modal>
+		<Modal visible={visible}>
+			<Formik
+				initialValues={{ quote: '', book: '' }}
+				validationSchema={validationSchema}
+				onSubmit={handleSubmit}
+				validateOnChange
+				validateOnBlur
+			>
+				{renderForm}
+			</Formik>
+		</Modal>
   )
 }
 

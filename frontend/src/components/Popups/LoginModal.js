@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react'
 import Modal from '../../HOCs/Modal/Modal';
 import { Field, Form, Formik, ErrorMessage } from "formik";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import * as Yup from "yup";
-import { auth } from '../..';
 import "./form.scss";
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../slices/slice';
+import { useRequest } from '../../hooks/useRequest';
 
 const renderForm = ({isSubmitting}) => (
 	<Form className="form">
@@ -14,7 +13,7 @@ const renderForm = ({isSubmitting}) => (
 		<h1>Login Form</h1>
 		<div className="group">
 			<label htmlFor="email">Email Address</label>
-			<Field name="email" type="text" className="input"/>
+			<Field name="email" type="text" className="input" />
 			<ErrorMessage name="email">
 				{msg => <div className="error-message">{msg}</div>}
 			</ErrorMessage>
@@ -45,20 +44,25 @@ const validationSchema = Yup.object({
 function LoginModal({visible}) {
 	const dispatch = useDispatch();
 
+	const { checkExistense } = useRequest();
+
 	const handleSubmit = useCallback(async (values, { setSubmitting, resetForm }) => {
 		const { email, password } = values;
 
 		try {
-			await signInWithEmailAndPassword(auth, email, password);
-			dispatch(setModal("none"))
+			const userExists = await checkExistense(email, password);
+
+			dispatch(setModal("none"));
+
+			if (!userExists) throw new Error();
 		} catch (e) {
-			alert("Sorry, something came up, try agaain or later.")
+			alert("Sorry, something came up, try again or later.")
 		}
 
 
 		setSubmitting(false);
 		resetForm();
-	}, [dispatch]);
+	}, [checkExistense, dispatch]);
 
 	return (
 		<Modal visible={visible}>

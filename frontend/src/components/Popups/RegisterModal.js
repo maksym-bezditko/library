@@ -3,13 +3,10 @@ import React, { useCallback } from 'react'
 import Modal from '../../HOCs/Modal/Modal';
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { auth } from '../..';
-import { updateProfile } from "firebase/auth";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { update, ref } from "firebase/database";
-import { db } from "../..";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../slices/slice";
+import { useRequest } from "../../hooks/useRequest";
+import { generateUserId } from "../../utils/generateUserId";
 
 const emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -69,39 +66,20 @@ const renderForm = ({isSubmitting}) => (
 	</Form>
 );
 
-const format = (str) => {
-	let arr = [];
-
-	str.split(" ").forEach((publication) => {
-		arr.push(publication[0].toUpperCase() + publication.substring(1))
-	})
-
-	return arr.join(" ")
-};
-
-const RegisterModal = ({visible}) => {
+const RegisterModal = ({ visible }) => {
 	const dispatch = useDispatch();
+
+	const { registerUser } = useRequest();
 
 	const handleSubmit = useCallback(async (values, { setSubmitting, resetForm }) => {
 		const { email, password, name, lastName } = values;
 
 		try {
-			const response = await createUserWithEmailAndPassword(auth, email, password);
-			const userId = auth.currentUser.uid;
-
-			const fullName = name.trim() + " " + lastName.trim();
-
 			try {
-				await updateProfile(response.user, { displayName: format(fullName)})
+				const res = await registerUser(generateUserId(), name, lastName, email, password);
 
-				const postData = {
-					fullName
-				};
+				console.log(res);
 
-				const updates = {};
-				updates['data/users/' + userId] = postData;
-
-				update(ref(db), updates);
 				dispatch(setModal("none"))
 			} catch (e) {
 				alert("Sorry, something came up, try again or later.")
@@ -112,7 +90,7 @@ const RegisterModal = ({visible}) => {
 
 		setSubmitting(false);
 		resetForm();
-	}, [dispatch]);
+	}, [dispatch, registerUser]);
 
 	return (
 		<Modal visible={visible}>

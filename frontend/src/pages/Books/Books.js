@@ -1,27 +1,21 @@
 import { Book } from "../../components/Book/Book";
 import "./Books.scss";
-import { useLayoutEffect } from "react";
-import { auth } from "../..";
-import { Dna } from  'react-loader-spinner'
-import { useDispatch, useSelector } from "react-redux";
-import { setBooks } from "../../slices/slice";
-import { sortListByDateDescending } from "../../utils/sortFunctions";
+import { useSelector } from "react-redux";
 import { booksSelector } from "../../selectors/selectors";
-import useBooksList from "../../hooks/useBookList";
+import { userSelector } from "../../selectors/selectors";
+import { deleteInProgressSelector } from "../../selectors/selectors";
+import { Dna } from "react-loader-spinner";
 
 const Books = () => {
-	const dispatch = useDispatch()
+	const user = useSelector(userSelector);
+
+  	const isAuthenticated = !!user.id;
 
 	const list = useSelector(booksSelector);
 
-	const {books, b_loading, b_error} = useBooksList();
-	const user = auth.currentUser;
+	const isDeleteInProgress = useSelector(deleteInProgressSelector);
 
-	useLayoutEffect(() => {
-		dispatch(setBooks(books))
-	}, [dispatch, books])
-
-	if (b_loading || b_error) {
+	if (isDeleteInProgress) {
 		return (
 			<div className="books">
 				<Dna
@@ -38,9 +32,9 @@ const Books = () => {
 
 	return (
 		<div className="books">
-				{list.length === 0 && user ? "No books yet" : null}
-				{[...list].sort(sortListByDateDescending).map((item) => {
-					return <Book key={item.id} link={item.url} title={item.title} id={item.id} timestamp={item.timestamp} status={item.status}/>
+				{list.length === 0 && isAuthenticated ? "No books yet" : null}
+				{[...list].map((item) => {
+					return <Book key={item.id} link={item.coverUrl} title={item.title} id={item.id} date={item.date} status={item.status}/>
 				})}
 		</div>
 	);

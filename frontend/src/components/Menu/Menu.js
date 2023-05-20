@@ -1,21 +1,21 @@
-import { useContext } from "react";
-import { AuthContext } from "../App/App";
 import { CSSTransition } from "react-transition-group";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import "./Menu.scss"
-import { auth } from "../..";
-import { signOut } from "firebase/auth";
 import { useSelector } from "react-redux";
-import { menuSelector } from "../../selectors/selectors";
-import { setModal } from "../../slices/slice";
-import { setMenu } from "../../slices/slice";
+import { menuSelector, userSelector } from "../../selectors/selectors";
+import { setModal, setMenu } from "../../slices/slice";
+import { useHelper } from "../../hooks/useHelper";
 
 const Menu = () => {
-	const user = useContext(AuthContext);
-
 	const dispatch = useDispatch()
+
+  const user = useSelector(userSelector);
 	const menu = useSelector(menuSelector);
+
+  const isAuthenticated = !!user.id;
+
+  const { signOut } = useHelper();
 
 	return (
 		<div
@@ -65,26 +65,26 @@ const Menu = () => {
                   My quotes
                 </NavLink>
 
-                {!user ? null : (
+                {!isAuthenticated ? null : (
                     <p
-                        className="menu-item logout-menu"
-                        onClick={() => {
-                            if (window.confirm("Are you sure that you want to log out?")) {
-                                signOut(auth);
-                                dispatch(setMenu(false));
-                            }
-                            }}
+                      className="menu-item logout-menu"
+                      onClick={() => {
+                          if (window.confirm("Are you sure that you want to log out?")) {
+                              signOut();
+                              dispatch(setMenu(false));
+                          }
+                      }}
                     >
                         Log out
                     </p>
                 )}
 
-                {auth.currentUser ? (
+                {isAuthenticated ? (
                     <p className="greeting" onClick={() => {
                         dispatch(setMenu(false));
                     }}>
                         Logged in as{" "}
-                        <span className="name">{auth.currentUser.displayName}</span>
+                        <span className="name">{user.firstName + user.secondName}</span>
                     </p>
                 ) : (
                     <p
@@ -95,7 +95,7 @@ const Menu = () => {
                     </p>
                 )}
 
-                {user ? null : (
+                {isAuthenticated ? null : (
                     <p
                         className="menu-item"
                         onClick={() => dispatch(setModal("register"))}
