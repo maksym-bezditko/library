@@ -84,7 +84,7 @@ const Menu = () => {
                         dispatch(setMenu(false));
                     }}>
                         Logged in as{" "}
-                        <span className="name">{user.firstName + user.secondName}</span>
+                        <span className="name">{user.firstName + ' ' + user.lastName}</span>
                     </p>
                 ) : (
                     <p

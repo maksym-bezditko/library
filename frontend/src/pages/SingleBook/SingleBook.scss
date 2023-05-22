@@ -80,9 +80,10 @@
 	@media (max-width: 473px) {
 		font-size: 14px;
 	}
-	// @media (max-width: 800px) {
-	// 	font-size: 22px;
-	// }
+}
+
+.book-author span {
+	color: #817d00;
 }
 
 .book-status {
@@ -148,8 +149,11 @@
 
 .related-quotes-title {
 	font-size: 23px;
+
 	@media (max-width: 550px) {
 		font-size: 18px;
+
+		width: 100%;
 	}
 }
 
@@ -165,14 +169,19 @@
 	@media (max-width: 550px) {
 		margin-top: 5px;
 		margin-left: 0;
+
+		width: 100%;
 	}
 }
 
-.button-wrapper {
+.button-wrapper-for-single-book {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+
 	@media (max-width: 550px) {
 		flex-direction: column;
+
+		width: 100%;
 	}
 }

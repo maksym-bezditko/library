@@ -6,6 +6,11 @@ public class CheckExistenceRequestBody
     public string password { get; set; } = null!;
 }
 
+public class CheckEmailRequestBody
+{
+    public string email { get; set; } = null!;
+}
+
 public class GetBooksRequestBody
 {
     public string userId { get; set; } = null!;

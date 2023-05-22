@@ -29,8 +29,6 @@ function AddQuoteModal({visible}) {
 	const handleSubmit = useCallback((values, { resetForm, setSubmitting }) => {
 		const { quote, book } = values;
 
-		console.log(book);
-
 		addUserQuote(user.id, {
 			id: uuidv4(),
 			content: quote,

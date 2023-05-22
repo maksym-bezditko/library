@@ -25,7 +25,7 @@ const SingleBook = () => {
 		<div className="single-book-wrapper">
 			<div className='single-book-avatar'>
 				<img className='book-cover' src={book.coverUrl} alt="book cover"/>
-				<div className="button-wrapper">
+				<div className="button-wrapper-for-single-book">
 					<button
 						className='button add-quote-button single-book-button'
 						onClick={() => dispatch(setModal("add-quote"))}
@@ -50,6 +50,9 @@ const SingleBook = () => {
 				<div className="book-status"><div className='status-wrapper'>{statuses[book.status]} {book.status.toLowerCase()}</div></div>
 				<div className='book-date'>
 					Added on {new Date(book.date).toDateString().slice(3)} by <span>{user.firstName + ' ' + user.lastName}</span>
+				</div>
+				<div className='book-date book-author'>
+					Authored by <span>{book.author}</span>
 				</div>
 				{quotes.length === 0 ? "No related quotes" : (
 					<div className='related-quotes'>

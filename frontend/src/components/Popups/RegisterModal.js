@@ -75,17 +75,11 @@ const RegisterModal = ({ visible }) => {
 		const { email, password, name, lastName } = values;
 
 		try {
-			try {
-				const res = await registerUser(generateUserId(), name, lastName, email, password);
+			await registerUser(generateUserId(), name, lastName, email, password);
 
-				console.log(res);
-
-				dispatch(setModal("none"))
-			} catch (e) {
-				alert("Sorry, something came up, try again or later.")
-			}
+			dispatch(setModal("none"))
 		} catch (e) {
-			alert("Sorry, something came up, try again or later.")
+			alert(e.message ?? "Sorry, something came up, try again or later.")
 		}
 
 		setSubmitting(false);

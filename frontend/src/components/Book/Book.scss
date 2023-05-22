@@ -5,7 +5,7 @@
 	align-items: center;
 	width: 260px;
 	max-width: 260px;
-	height: 400px;
+	height: 440px;
 	background-color: #eaeaea;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.281);
 	padding: 20px 10px;
@@ -39,7 +39,7 @@
 	margin-top: 10px;
 	width: 100%;
 	// min-height: 54px;
-	// ! text-overflow: ellipsis; 
+	// ! text-overflow: ellipsis;
 	// white-space: nowrap;
 	@media (max-width: 366px) {
 		font-size: 16px;
@@ -63,10 +63,24 @@
 	color: white;
 	height: 25px;
 	flex-basis: 50%;
-	margin-right: 10px; 
+	margin-right: 10px;
 	display: grid;
 	place-items: center;
 	border-radius: 17px;
+	@media (max-width: 366px) {
+		font-size: 12px;
+	}
+}
+
+.author {
+	background-color: #e3dc06;
+	color: black;
+	height: 25px;
+	margin-top: 10px;
+	display: grid;
+	place-items: center;
+	border-radius: 17px;
+
 	@media (max-width: 366px) {
 		font-size: 12px;
 	}

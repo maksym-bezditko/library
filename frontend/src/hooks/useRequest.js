@@ -30,8 +30,6 @@ export const useRequest = () => {
             userId,
             book,
         }).then(async (res) => {
-            console.log(res);
-
             const booksAfterUpdate = await getUserBooks(userId);
 
             dispatch(setUser({
@@ -57,8 +55,6 @@ export const useRequest = () => {
         let quotesAfterUpdate;
 
         if (!keepQuotes) {
-            console.log(true);
-
             await axios.post(`${apiDomain}/Quotes/DeleteAssociated`, {
                 userId,
                 bookId,
@@ -120,25 +116,25 @@ export const useRequest = () => {
     }, [getUser]);
 
     const registerUser = useCallback(async (id, firstName, lastName, email, password) => {
-        const response = await fetch(`${apiDomain}/Users/Register`, {
-            method: 'post',
-            body: JSON.stringify({
-                id,
-                firstName,
-                lastName,
-                email,
-                password,
-                books: [],
-                quotes: [],
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
+        const checkResponse = await axios.post(`${apiDomain}/Users/EmailExistence`, {
+            email
         });
 
-        console.log(response);
+        if (checkResponse.data.Succeeded === false) {
+            throw new Error('Email is already registered!');
+        }
 
-        setTimeout(() => getUser(id), 1000);
+        await axios.post(`${apiDomain}/Users/Register`, {
+            id,
+            firstName,
+            lastName,
+            email,
+            password,
+            books: [],
+            quotes: [],
+        });
+
+        getUser(id);
     }, [getUser]);
 
     return {

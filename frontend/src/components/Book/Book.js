@@ -2,7 +2,7 @@ import "./Book.scss";
 import { NavLink } from "react-router-dom";
 import { statuses } from "../Popups/AddModal";
 
-export const Book = ({id, title, link, date, status}) => {
+export const Book = ({id, title, link, date, status, author}) => {
 	const createdDate = new Date(date);
 
 	return (
@@ -18,6 +18,8 @@ export const Book = ({id, title, link, date, status}) => {
 					<div className="status">{statuses[status]} {status.toLowerCase()}</div>
 					<div className="date">{createdDate.toDateString().slice(3)}</div>
 				</div>
+
+				<div className="author">{author}</div>
 			</div>
 		</NavLink>
 	)

@@ -1,3 +1,4 @@
-/backend/.idea
-/backend/LibraryApi/bin/
-/frontend/node_modules/
+*/node_modules
+*/.idea
+*/*/bin
+.git

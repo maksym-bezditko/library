@@ -44,6 +44,19 @@ public class UsersController : ControllerBase
         }
 
     }
+    
+    [HttpPost("EmailExistence")]
+    public async Task<IActionResult> EmailExists([FromBody] CheckEmailRequestBody credentials)
+    {
+        var users = await _usersService.GetAsync();
+        
+        var found = users.Any(b => b.email == credentials.email);
+
+        if (found) return Ok(new Response { Succeeded = false, Message = "found", Status = 200 });
+        {
+            return Ok(new Response{ Succeeded = true, Message = "not found", Status = 200 });
+        }
+    }
 
     [HttpPost("Register")]
     public async Task<IActionResult> Post(User newUser)
